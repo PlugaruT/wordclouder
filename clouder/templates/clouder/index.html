@@ -14,8 +14,18 @@
     </div>
 </div>
 <div class="row">
-    Word cloud generated based on {{obj_count}}
+    Word cloud generated based on {{obj_count}} comments.
+    <img src="{{ image }}">
 </div>
-
+<div class="row">
+    <h4>Word Frequencies</h4>
+    <div class="row">
+        <ul>
+            {% for key, value in word_frequecies.items %}
+            <li>{{key}} - {{value}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 {% endblock %}
