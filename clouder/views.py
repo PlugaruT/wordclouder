@@ -1,5 +1,14 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .models import TextComment
+from .forms import TextCommentForm
+
+
 def index(request):
-    pass
+    obj = TextCommentForm(request.POST)
+    obj.save()
+
+    cnt = TextComment.objects.count()
+    return render(
+        request, "clouder/index.html", {"form": TextCommentForm(), "obj_count": cnt}
+    )

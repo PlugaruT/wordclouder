@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class TextComment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(db_index=True)
