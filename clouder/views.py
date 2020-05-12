@@ -32,12 +32,12 @@ def index(request):
         "clouder/index.html",
         {
             "form": TextCommentForm(),
-            "obj_count": cnt,
+            "obj_count": 0,
             "word_frequecies": {},
             "image": "",
         },
     )
-    
+
     cloud = WordCloud(background_color="white").generate(text)
 
     img_bytes = _create_image_as_bytes(cloud)
