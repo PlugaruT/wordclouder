@@ -1,0 +1,1 @@
+web: gunicorn wordclouder.wsgi --log-file -
