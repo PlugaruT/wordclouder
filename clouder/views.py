@@ -26,6 +26,18 @@ def index(request):
 
     text = " ".join([v["content"] for v in TextComment.objects.all().values("content")])
 
+    if not text:
+        return render(
+        request,
+        "clouder/index.html",
+        {
+            "form": TextCommentForm(),
+            "obj_count": cnt,
+            "word_frequecies": {},
+            "image": "",
+        },
+    )
+    
     cloud = WordCloud(background_color="white").generate(text)
 
     img_bytes = _create_image_as_bytes(cloud)
