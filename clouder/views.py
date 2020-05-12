@@ -1,5 +1,6 @@
 import io
 import urllib, base64
+from collections import defaultdict
 
 from django.shortcuts import render
 from wordcloud import WordCloud
@@ -28,30 +29,32 @@ def index(request):
 
     if not text:
         return render(
-        request,
-        "clouder/index.html",
-        {
-            "form": TextCommentForm(),
-            "obj_count": 0,
-            "word_frequecies": {},
-            "image": "",
-        },
-    )
+            request,
+            "clouder/index.html",
+            {
+                "form": TextCommentForm(),
+                "obj_count": 0,
+                "word_frequecies": {},
+                "image": "",
+            },
+        )
 
-    cloud = WordCloud(background_color="white").generate(text)
+    cloud = WordCloud(background_color=None, mode="RGBA").generate(text)
 
     img_bytes = _create_image_as_bytes(cloud)
 
-    uri = f"data:image/png;base64,{urllib.parse.quote(img_bytes)}"
+    freq = defaultdict(list)
 
-    cnt = TextComment.objects.count()
+    for word, frequency in cloud.words_.items():
+        freq[frequency].append(word)
+
     return render(
         request,
         "clouder/index.html",
         {
             "form": TextCommentForm(),
-            "obj_count": cnt,
-            "word_frequecies": cloud.words_,
-            "image": uri,
+            "obj_count": TextComment.objects.count(),
+            "word_frequecies": dict(freq),
+            "image": f"data:image/png;base64,{urllib.parse.quote(img_bytes)}",
         },
     )

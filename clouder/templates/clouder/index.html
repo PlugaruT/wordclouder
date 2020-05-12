@@ -14,20 +14,29 @@
     </div>
 </div>
 {% if  word_frequecies %}
-    <div class="row">
-        Word cloud generated based on {{obj_count}} comments.
-        <img src="{{ image }}">
-    </div>
-    <div class="row">
-        <h4>Word Frequencies</h4>
-        <div class="row">
-            <ul>
-                {% for key, value in word_frequecies.items %}
-                <li>{{key}} - {{value}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+<div class="row">
+    Word cloud generated based on {{obj_count}} comments.
+    <img src="{{ image }}">
+</div>
+<div class="row">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Frequency</th>
+                <th scope="col">Words</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in word_frequecies.items %}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{value |join:", "}}</td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endif %}
 
 {% endblock %}
