@@ -10,9 +10,13 @@ class WordCloudGenerator:
         self.cloud_generator = WordCloud(**kwargs)
 
     def get_word_counters(self, text: str) -> dict:
+        if not text:
+            return {}
         return self.cloud_generator.process_text(text)
 
     def get_image_bytes(self, text: str) -> bytes:
+        if not text:
+            return ""
         cloud = self.cloud_generator.generate(text)
         plt.figure(figsize=(32, 18))
         plt.imshow(cloud, interpolation="bilinear", aspect="auto")

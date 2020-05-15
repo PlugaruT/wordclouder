@@ -1,3 +1,4 @@
+import urllib
 from collections import defaultdict
 
 from django.shortcuts import render
@@ -14,18 +15,6 @@ def index(request):
 
     text = " ".join([v["content"] for v in TextComment.objects.all().values("content")])
 
-    if not text:
-        return render(
-            request,
-            "clouder/index.html",
-            {
-                "form": TextCommentForm(),
-                "obj_count": 0,
-                "word_frequecies": {},
-                "image": "",
-            },
-        )
-
     generator = WordCloudGenerator(background_color=None, mode="RGBA")
     word_counters = generator.get_word_counters(text)
     img_bytes = generator.get_image_bytes(text)
@@ -34,6 +23,8 @@ def index(request):
 
     for word, frequency in word_counters.items():
         freq[frequency].append(word)
+
+    freq = dict(sorted(freq.items(), reverse=True))
 
     return render(
         request,
