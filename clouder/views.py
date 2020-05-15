@@ -1,23 +1,10 @@
-import io
-import urllib, base64
 from collections import defaultdict
 
 from django.shortcuts import render
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 
 from .models import TextComment
 from .forms import TextCommentForm
-
-
-def _create_image_as_bytes(cloud: WordCloud):
-    plt.figure(figsize=(32, 18))
-    plt.imshow(cloud, interpolation="bilinear", aspect="auto")
-    fig = plt.gcf()
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png")
-    buf.seek(0)
-    return base64.b64encode(buf.read())
+from .services import WordCloudGenerator
 
 
 def index(request):
@@ -39,13 +26,13 @@ def index(request):
             },
         )
 
-    cloud = WordCloud(background_color=None, mode="RGBA").generate(text)
-
-    img_bytes = _create_image_as_bytes(cloud)
+    generator = WordCloudGenerator(background_color=None, mode="RGBA")
+    word_counters = generator.get_word_counters(text)
+    img_bytes = generator.get_image_bytes(text)
 
     freq = defaultdict(list)
 
-    for word, frequency in cloud.words_.items():
+    for word, frequency in word_counters.items():
         freq[frequency].append(word)
 
     return render(
